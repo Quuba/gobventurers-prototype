@@ -104,16 +104,10 @@ namespace Player
                         _dashTimer += Time.deltaTime;
                     }
 
-                    if (CheckForWalls((_dashTarget - _dashStartPos).normalized, dashWallCheckDistance, dashCollisionLayerMask))
-                    {
-                        // _dashCooldownTimer = dashCooldown;
-                        // _playerState = PlayerState.Default;
-                        break;
-                    }
-
+                    if (CheckForWalls((_dashTarget - _dashStartPos).normalized, dashWallCheckDistance, dashCollisionLayerMask)) break;
+                    
                     _rb.MovePosition(Vector3.Lerp(_dashStartPos, _dashTarget, dashCurve.Evaluate(_dashTimer / dashTime)));
-
-
+                    
                     break;
                 case PlayerState.Stunned:
                     break;
@@ -135,14 +129,7 @@ namespace Player
         private bool CheckForWalls(Vector3 dir, float distance, LayerMask layerMask)
         {
             Ray ray = new Ray(_transform.position, dir);
-            if (Physics.Raycast(ray, distance, layerMask))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return Physics.Raycast(ray, distance, layerMask);
         }
 
         private void RotateTowardsMouse()
