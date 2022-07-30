@@ -10,11 +10,16 @@ namespace Player
         [Header("Movement settings")]
         [SerializeField] private float baseMovementSpeed = 4f;
 
+
         [Header("Dash settings")]
         [SerializeField] private float dashCooldown = 0.8f;
 
         [SerializeField] private float dashLength = 2f;
         [SerializeField] private float dashTime = 0.8f;
+        [SerializeField] private AnimationCurve dashCurve;
+        [SerializeField] private float dashWallCheckDistance;
+        [SerializeField] private LayerMask dashCollisionLayerMask;
+
 
         [Header("Mouse Settings")]
         [SerializeField] private LayerMask mousePlaneLayerMask;
@@ -30,11 +35,13 @@ namespace Player
         private Vector3 _dashStartPos;
 
         private float _inputX = 0f, _inputV = 0f;
+
+        // private Vector3 _mouseWorldPos;
+        private Vector3 _mouseDir;
         private PlayerState _playerState;
 
         private Rigidbody _rb;
         private Transform _transform;
-        private Vector3 _mouseWorldPos;
 
 
         // Start is called before the first frame update
@@ -50,7 +57,6 @@ namespace Player
             switch (_playerState)
             {
                 case PlayerState.Default:
-                    //TODO: find out why using normal GetAxis here gives floaty movement 
                     _inputX = Input.GetAxisRaw("Horizontal");
                     _inputV = Input.GetAxisRaw("Vertical");
 
@@ -68,16 +74,6 @@ namespace Player
 
                     break;
                 case PlayerState.Dashing:
-                    _rb.MovePosition(Vector3.Lerp(_dashStartPos, _dashTarget, _dashTimer / dashTime));
-                    if (_dashTimer >= dashTime)
-                    {
-                        _dashCooldownTimer = dashCooldown;
-                        _playerState = PlayerState.Default;
-                    }
-                    else
-                    {
-                        _dashTimer += Time.deltaTime;
-                    }
 
                     break;
                 case PlayerState.Stunned:
@@ -93,10 +89,31 @@ namespace Player
             {
                 case PlayerState.Default:
                     //this guy (https://youtu.be/ixM2W2tPn6c) says it's a good method and he's right
+                    //BUG: Gives floaty movement when using Input.GetAxis instead of GetAxisRaw
                     var direction = new Vector3(_inputX, 0f, _inputV).normalized * baseMovementSpeed;
                     _rb.MovePosition(_transform.position + (baseMovementSpeed * Time.deltaTime * direction));
                     break;
                 case PlayerState.Dashing:
+                    if (_dashTimer >= dashTime)
+                    {
+                        _dashCooldownTimer = dashCooldown;
+                        _playerState = PlayerState.Default;
+                    }
+                    else
+                    {
+                        _dashTimer += Time.deltaTime;
+                    }
+
+                    if (CheckForWalls((_dashTarget - _dashStartPos).normalized, dashWallCheckDistance, dashCollisionLayerMask))
+                    {
+                        // _dashCooldownTimer = dashCooldown;
+                        // _playerState = PlayerState.Default;
+                        break;
+                    }
+
+                    _rb.MovePosition(Vector3.Lerp(_dashStartPos, _dashTarget, dashCurve.Evaluate(_dashTimer / dashTime)));
+
+
                     break;
                 case PlayerState.Stunned:
                     break;
@@ -115,26 +132,44 @@ namespace Player
             _playerState = PlayerState.Dashing;
         }
 
+        private bool CheckForWalls(Vector3 dir, float distance, LayerMask layerMask)
+        {
+            Ray ray = new Ray(_transform.position, dir);
+            if (Physics.Raycast(ray, distance, layerMask))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         private void RotateTowardsMouse()
         {
             Ray ray = playerCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, _mouseRaycastMaxDistance, mousePlaneLayerMask))
             {
-                _mouseWorldPos = hit.point;
-                _mouseWorldPos.y = _transform.position.y;
+                var playerPos = _transform.position;
+                Vector3 mouseWorldPos = hit.point;
+                mouseWorldPos.y = playerPos.y;
+
+                _mouseDir = (mouseWorldPos - playerPos).normalized;
+                _transform.forward = _mouseDir;
             }
         }
 
         private void OnDrawGizmosSelected()
         {
-            if (!drawMousePos || _transform == null )
+            if (!drawMousePos || _transform == null)
             {
                 return;
             }
 
+            var playerPos = _transform.position;
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(_transform.position, _mouseWorldPos);
-            Debug.Log(_mouseWorldPos);
+            Gizmos.DrawLine(playerPos, playerPos + _mouseDir);
+            // Debug.Log();
         }
 
         private enum PlayerState
