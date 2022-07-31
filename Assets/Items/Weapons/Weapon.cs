@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Items.Weapons
@@ -19,6 +20,11 @@ namespace Items.Weapons
         public void UsePrimaryAction()
         {
             _animator.SetTrigger("primaryAction");
+        }
+
+        public void UseSecondaryAction()
+        {
+            
         }
     }
 }

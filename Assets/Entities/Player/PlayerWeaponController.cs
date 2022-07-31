@@ -49,7 +49,7 @@ namespace Entities.Player
 
         private void PrimaryAttack()
         {
-            Debug.Log("test attack");
+            // Debug.Log("test attack");
             currentWeapon.UsePrimaryAction();
         }
 

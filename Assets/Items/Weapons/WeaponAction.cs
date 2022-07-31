@@ -7,7 +7,7 @@ namespace Items.Weapons
     public class WeaponAction
     {
         public bool canBeCharged = false;
-        [SerializeField] private Animation actionAnimation;
+        // [SerializeField] private Animation actionAnimation;
         public void Use()
         {
             Debug.Log("weapon action is not implemented");
