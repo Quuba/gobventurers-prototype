@@ -34,7 +34,6 @@ namespace Entities.Player
                 case PlayerState.Default:
                     if (Input.GetKeyDown(KeyCode.Mouse0))
                     {
-                        
                         PrimaryAttack();
                     }
                     break;

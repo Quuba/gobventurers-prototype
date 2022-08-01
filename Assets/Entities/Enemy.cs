@@ -10,78 +10,110 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int currentHealth;
     public int Health => currentHealth;
     [SerializeField] private float invincibilityTime = 0.5f;
-    private float invincibilityTimer = 0.5f;
+    private float _invincibilityTimer = 0.5f;
 
-    private bool isInvincible;
+    private bool _isInvincible;
 
-    private EnemyState currentState;
-    public EnemyState GetEnemyState => currentState;
+    private EnemyState _currentState;
+    public EnemyState GetEnemyState => _currentState;
     
     public event Action<EnemyState> EnemyStateChanged;
+    [SerializeField] private Animator animator;
 
-    private float stunTimer;
+    private float _stunTimer;
 
     [Header("Debug")]
     public bool showHealthBar;
 
     private void Awake()
     {
-        currentState = EnemyState.Default;
+        _currentState = EnemyState.Default;
         currentHealth = baseHealth;
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        switch (currentState)
+        switch (_currentState)
         {
             case EnemyState.Default:
                 break;
             case EnemyState.Stunned:
-                if (stunTimer <= 0)
+                if (_stunTimer <= 0)
                 {
                     SetEnemyState(EnemyState.Default);
                 }
                 else
                 {
-                    stunTimer -= Time.deltaTime;
+                    _stunTimer -= Time.deltaTime;
                 }
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
-        if (isInvincible)
+        if (_isInvincible)
         {
-            invincibilityTimer += Time.deltaTime;
-            if (invincibilityTimer >= invincibilityTime)
+            _invincibilityTimer += Time.deltaTime;
+            if (_invincibilityTimer >= invincibilityTime)
             {
-                isInvincible = false;
-                invincibilityTimer = 0f;
+                _isInvincible = false;
+                _invincibilityTimer = 0f;
             }
         }
     }
 
     public void TakeDamage(int damage)
     {
-        if (!isInvincible)
+        if (!_isInvincible)
         {
             currentHealth -= damage;
             Debug.Log($"ouch, I took {damage} damage");
-            isInvincible = true;
+            if (currentHealth <= 0)
+            {
+                Die();
+            }
+            
+            _isInvincible = true;
+            animator.SetTrigger(GetAnimatorParameterValue(AnimatorParameter.HurtTrigger));
         }
-        
-        Stun(5f);
     }
 
-    public void Stun(float stunTime)
+    private void Die()
     {
-        stunTimer = stunTime;
+        Debug.Log("CURSE YOU PERRY THE PLATYPUS");
+        gameObject.SetActive(false);
+    }
+
+    public void ApplyStun(float stunTime)
+    {
+        _stunTimer = stunTime;
         SetEnemyState(EnemyState.Stunned);
+    }
+
+    public void ApplyKnockback(Vector3 direction, float force)
+    {
+        
     }
 
     public void SetEnemyState(EnemyState newState)
     {
-        currentState = newState;
+        _currentState = newState;
         EnemyStateChanged?.Invoke(newState);
+    }
+    private enum AnimatorParameter
+    {
+        HurtTrigger,
+        
+    }
+    Dictionary<AnimatorParameter, string> animatorParamDict = new Dictionary<AnimatorParameter, string>()
+    {
+        {AnimatorParameter.HurtTrigger, "hurt"}
+    };
+    
+    private string GetAnimatorParameterValue(AnimatorParameter parameter)
+    {
+        
+        return animatorParamDict[parameter];
     }
 }
