@@ -31,7 +31,11 @@ namespace Rooms.Scripts
     public enum DungeonRoomType
     {
         SpawnRoom,
-        NormalRoom,
-        Corridor
+        Normal,
+        Reward,
+        Hub,
+        Boss,
+        PreBoss,
+        Shop
     }
 }
