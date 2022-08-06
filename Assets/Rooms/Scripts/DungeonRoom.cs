@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Shared.enums;
 using UnityEngine;
 
 namespace Rooms.Scripts
@@ -26,16 +27,5 @@ namespace Rooms.Scripts
         {
             return transform.position;
         }
-    }
-
-    public enum DungeonRoomType
-    {
-        SpawnRoom,
-        Normal,
-        Reward,
-        Hub,
-        Boss,
-        PreBoss,
-        Shop
     }
 }

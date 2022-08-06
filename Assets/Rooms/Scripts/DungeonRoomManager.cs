@@ -17,6 +17,8 @@ namespace Rooms.Scripts
 
         private DungeonRoom currentRoom;
 
+        // [SerializeField] private float cellSize = 1f;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -27,22 +29,22 @@ namespace Rooms.Scripts
         void Update()
         {
         }
+        
+        //TODO: use wave function collapse algorithm for dungeon generation;
+        //1. place start and boss rooms;
+        //2. fill the rest of the squares with normal, reward and other kinds of rooms;
+        //3. combine some of the neighboring rooms to make larger ones
 
         public void GenerateStartRoom()
         {
             GameObject newStartRoom = Instantiate(startRoom.roomPrefab, Vector3.zero, Quaternion.identity);
             newStartRoom.transform.parent = transform;
-
-            if (newStartRoom.TryGetComponent(out DungeonRoom room))
-            {
-                for (var i = 0; i < room.Passages.Count; i++)
-                {
-                }
-            }
+            
         }
-
+            
         private void ConnectRooms(ref DungeonRoom room1, ref DungeonRoom room2)
         {
+            
         }
     }
 

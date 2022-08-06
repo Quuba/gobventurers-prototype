@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Shared.enums;
 using UnityEngine;
 
 namespace Rooms.Scripts
@@ -85,14 +86,14 @@ namespace Rooms.Scripts
 
         public struct Passage
         {
-            public RoomNode node1;
-            public RoomNode node2;
+            public RoomNode entryNode;
+            public RoomNode exitNode;
             public bool oneWay;
 
-            public Passage(RoomNode node1, RoomNode node2, bool oneWay)
+            public Passage(RoomNode entryNode, RoomNode exitNode, bool oneWay)
             {
-                this.node1 = node1;
-                this.node2 = node2;
+                this.entryNode = entryNode;
+                this.exitNode = exitNode;
                 this.oneWay = oneWay;
             }
         }

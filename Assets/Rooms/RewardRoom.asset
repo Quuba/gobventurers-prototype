@@ -10,8 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b4c11915a3880344d91d5432919007ab, type: 3}
-  m_Name: Start Room
+  m_Name: RewardRoom
   m_EditorClassIdentifier: 
   roomPrefab: {fileID: 8962867917117843627, guid: a20413adc98fe2347aa81f65baf33fdb, type: 3}
-  exits: 03000000
-  enemySpawns: []
+  roomShape: 0
