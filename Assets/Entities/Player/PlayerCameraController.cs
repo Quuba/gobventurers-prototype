@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerCameraController : MonoBehaviour
 {
     [SerializeField] private Transform playerTransform;
-    
+
 
     [Space(10)] [SerializeField] private Optional<FloatBounds> distanceBounds;
     [SerializeField] private float playerDistance = 5f;
@@ -17,7 +17,7 @@ public class PlayerCameraController : MonoBehaviour
 
     [SerializeField] private bool useSmoothing = true;
     [SerializeField] private float smoothTime = 0.25f;
-    
+
     private Transform _transform;
 
     private Vector3 _velocity = Vector3.zero;
@@ -51,6 +51,8 @@ public class PlayerCameraController : MonoBehaviour
 
     private void OnValidate()
     {
+        if (playerTransform == null) return;
+
         SetTransformRelativeToPoint(playerTransform.position);
     }
 
@@ -87,7 +89,7 @@ public class PlayerCameraController : MonoBehaviour
         {
             _transform.position = targetPos + newCamPos * playerDistance;
         }
-        
+
 
         _transform.localEulerAngles = new Vector3(angleX, -angleY - 90f, 0f);
     }
