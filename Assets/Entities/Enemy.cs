@@ -81,11 +81,12 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
+        //author: Jonasz Kule
         Debug.Log("CURSE YOU PERRY THE PLATYPUS");
         Rigidbody rb = GetComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.None;
         GetComponent<Rigidbody>().AddForce(Vector3.up * 30, ForceMode.VelocityChange);
-        //gameObject.SetActive(false);
+        Destroy(gameObject, 1.5f);
     }
 
     public void ApplyStun(float stunTime)
