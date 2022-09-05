@@ -9,6 +9,7 @@ namespace Entities
     {
         [SerializeField] private EnemyManager enemyManager;
         [SerializeField] private EnemyMovementType movementType;
+        [SerializeField] private float baseMoveSpeed = 5f;
         private EnemyState _currentState;
 
         private Vector3 _playerPos;
@@ -63,7 +64,7 @@ namespace Entities
                     Vector3 enemyPos = transform.position;
                     Vector3 playerDir = _playerPos - enemyPos;
                     playerDir.y = 0f;
-                    rb.MovePosition(enemyPos + playerDir.normalized * Time.deltaTime);
+                    rb.MovePosition(enemyPos + playerDir.normalized * (baseMoveSpeed * Time.deltaTime));
                     break;
                 case EnemyState.Stunned:
                     break;

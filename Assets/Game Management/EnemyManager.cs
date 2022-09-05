@@ -46,7 +46,6 @@ public class EnemyManager : MonoBehaviour
     {
         return playerPosition;
     }
-    
 }
 
 

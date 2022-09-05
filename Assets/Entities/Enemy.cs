@@ -82,7 +82,10 @@ public class Enemy : MonoBehaviour
     private void Die()
     {
         Debug.Log("CURSE YOU PERRY THE PLATYPUS");
-        gameObject.SetActive(false);
+        Rigidbody rb = GetComponent<Rigidbody>();
+        rb.constraints = RigidbodyConstraints.None;
+        GetComponent<Rigidbody>().AddForce(Vector3.up * 30, ForceMode.VelocityChange);
+        //gameObject.SetActive(false);
     }
 
     public void ApplyStun(float stunTime)
