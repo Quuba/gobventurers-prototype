@@ -68,7 +68,7 @@ public class Enemy : MonoBehaviour
         if (!_isInvincible)
         {
             currentHealth -= damage;
-            Debug.Log($"ouch, I took {damage} damage");
+            // Debug.Log($"ouch, I took {damage} damage");
             if (currentHealth <= 0)
             {
                 Die();
