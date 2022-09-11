@@ -13,12 +13,12 @@ namespace Entities
         private EnemyState _currentState;
 
         private Vector3 _playerPos;
-        private Rigidbody rb;
+        private Rigidbody _rb;
         private Enemy _enemy;
 
         private void Awake()
         {
-            rb = GetComponent<Rigidbody>();
+            _rb = GetComponent<Rigidbody>();
             _enemy = GetComponent<Enemy>();
             _currentState = _enemy.GetEnemyState;
         }
@@ -48,6 +48,8 @@ namespace Entities
 
             switch (movementType)
             {
+                case  EnemyMovementType.Stop:
+                    
                 case EnemyMovementType.FollowPlayer:
                     _playerPos = enemyManager.GetPlayerPosition();
                     break;
@@ -61,10 +63,13 @@ namespace Entities
             switch (_currentState)
             {
                 case EnemyState.Default:
-                    Vector3 enemyPos = transform.position;
-                    Vector3 playerDir = _playerPos - enemyPos;
-                    playerDir.y = 0f;
-                    rb.MovePosition(enemyPos + playerDir.normalized * (baseMoveSpeed * Time.deltaTime));
+                    if (movementType == EnemyMovementType.FollowPlayer)
+                    {
+                        Vector3 enemyPos = transform.position;
+                        Vector3 playerDir = _playerPos - enemyPos;
+                        playerDir.y = 0f;
+                        _rb.MovePosition(enemyPos + playerDir.normalized * (baseMoveSpeed * Time.deltaTime));
+                    }
                     break;
                 case EnemyState.Stunned:
                     break;
@@ -81,6 +86,7 @@ namespace Entities
 
     enum EnemyMovementType
     {
+        Stop,
         FollowPlayer
     }
 }
