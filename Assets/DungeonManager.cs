@@ -25,13 +25,16 @@ public class DungeonManager : MonoBehaviour
     {
         
     }
-
-    private void Foo()
-    {
-        
-    }
+    
     public void ChangeRoom(DungeonRoom nextRoom, DungeonRoomDoor entryDoor)
     {
         currentRoom = nextRoom;
+        Entities.Player.Player player = GameManager.Instance.Player;
+        entryDoor.isLocked = true;
+        float playerY = player.transform.position.y;
+        Vector3 newPos = entryDoor.transform.position;
+        newPos.y = playerY;
+        player.transform.position = newPos;
+        
     }
 }

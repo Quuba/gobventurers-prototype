@@ -14,6 +14,8 @@ namespace Entities.Player
 
         private void Awake()
         {
+            GameManager.Instance.Player = this;
+            
             _currentHealth = baseHealth;
         }
 
